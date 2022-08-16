@@ -1,0 +1,15 @@
+.infinite-scroll {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  .inner-scroll {
+    // 最小高度是父容器高度多才会出现滚动条
+    min-height: 105%;
+    .loading-container {
+      text-align: center;
+      width: 100%;
+      color: #000;
+      min-height: 20px;
+    }
+  }
+}
