@@ -2,10 +2,14 @@ import React, { useState } from 'react';
 import { InfiniteScroll } from 'yc-fish';
 export default () => {
   const [list, setList] = useState(Array(12).fill(' '));
-  const hasMore = true;
+  const [hasMore, setHasMore] = useState(true);
   const fetchMoreData = function() {
     console.log('fetchMoreData');
     setList(list => {
+      if (list.length > 100) {
+        setHasMore(false);
+        return list;
+      }
       return [].concat(list, Array(12).fill(' '));
     });
     console.log('list', list);

@@ -4,8 +4,55 @@ import classnames from 'classnames';
 
 // 用于记录加载项数的变化
 let dataLength = 0;
+export type ReactElement = JSX.Element;
 
-export default function InfiniteScroll(props: any) {
+export interface IScrollProps {
+  /**
+   * 是否还有更多数据未加载
+   * @description       是否还有更多数据未加载,flase 的时候会停止继续加载
+   * @description.zh-CN 是否还有更多数据未加载,flase 的时候会停止继续加载
+   * @default           true
+   */
+  hasMore: boolean;
+  /**
+   * 加载到最后一页的数据样式
+   * @description       加载到最后一页的数据样式
+   * @description.zh-CN 加载到最后一页的数据样式
+   * @default           已经到底了
+   */
+  endFont?: Function | string;
+  /**
+   * 数据的长度
+   * @description       数据的长度监控，如果小于已经加载的数据被视为重新初始化化
+   * @description.zh-CN 数据的长度监控，如果小于已经加载的数据被视为重新初始化化
+   * @default
+   */
+  dataLength: number;
+  /**
+   * 加载中样式的回调 或者是 ReactElement
+   * @description        加载中样式的回调 或者是 ReactElement
+   * @description.zh-CN  加载中样式的回调 或者是 ReactElement
+   * @default           <p className="loading">加载中...</p>
+   */
+  loader?: ReactElement | Function;
+  /**
+   *  加到底请求数据的回调
+   * @description       到底请求数据的回调
+   * @description.zh-CN  到底请求数据的回调
+   * @default           ()=>{}
+   */
+  next?: Function;
+  /**
+   * 类名
+   * @description       类名
+   * @description.zh-CN 类名
+   * @default
+   */
+  className?: Function;
+  children?: any;
+}
+
+export default function InfiniteScroll(props: IScrollProps) {
   // 监视器
   let observer: any = null;
   // 获取滚动容器的引用
@@ -25,6 +72,13 @@ export default function InfiniteScroll(props: any) {
     observer.observe(loadingRef.current);
     return observer;
   };
+
+  // 加载到最后的文案
+  const loadingEndFont = props?.endFont
+    ? typeof props.endFont == 'function'
+      ? props.endFont()
+      : props.endFont
+    : '已经到底了';
 
   useEffect(() => {
     if (dataLength > props.dataLength) {
@@ -50,7 +104,15 @@ export default function InfiniteScroll(props: any) {
   }
 
   // 加载样式
-  const loader = props?.loader || <p className="loading">加载中...</p>;
+  const loader = props?.loader ? (
+    typeof props.loader === 'function' ? (
+      props.loader()
+    ) : (
+      props.loader
+    )
+  ) : (
+    <p className="loading">加载中...</p>
+  );
   return (
     <div className={classnames(['infinite-scroll', props.className])}>
       <div className="inner-scroll" ref={innerScrollRef}>
@@ -64,7 +126,7 @@ export default function InfiniteScroll(props: any) {
             {loader}
           </div>
         ) : (
-          ''
+          loadingEndFont
         )}
       </div>
     </div>

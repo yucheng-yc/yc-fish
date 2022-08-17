@@ -7,3 +7,4 @@ nav:
 ## InfiniteScroll
 
 <code src="../examples/infiniteScroll.jsx"></code>
+<API></API>
