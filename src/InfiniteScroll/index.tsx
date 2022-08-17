@@ -11,7 +11,7 @@ export default function InfiniteScroll(props: any) {
   // 获取滚动容器的引用
   const innerScrollRef: any = useRef();
   // 获取加载中的引用
-  const loadingRef = useRef();
+  const loadingRef: any = useRef();
   // 是否还有更多
   const hasMore = props?.hasMore || false;
   // 使用es6的监听器
